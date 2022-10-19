@@ -57,7 +57,17 @@ async def inline_handlers(_, event: Message):
             if "|||" in message.text:
                 f_text = message.text.split("|||", 1)[0]
                 msg_text = message.text.html.split("|||", 1)[0]
-            answers += f'**🍿 Title ➠ ' + '' + f_text.split("\n", 1)[0] + '' + '\n\n📜 About ➠ ' + '' + f_text.split("\n", 2)[-1] + ' \n\n**'
+            answers.append(InlineQueryResultArticle(
+                    title="{}".format(f_text.split("\n", 1)[0]),
+                    description="{}".format(f_text.split("\n", 2)[-1]),
+                    thumb_url=thumb,
+                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Search Again", switch_inline_query_current_chat=""), InlineKeyboardButton("Go Inline", switch_inline_query="")]]),
+                    input_message_content=InputTextMessageContent(
+                        message_text=msg_text,
+                        parse_mode="html",
+                        disable_web_page_preview=True
+                    )
+             ))
     try:
         msg = await event.reply_text(answers)
         await asyncio.sleep(30)
